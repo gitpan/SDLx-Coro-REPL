@@ -4,7 +4,7 @@ use strict;
 use lib 'lib';
 
 use SDLx::Coro::REPL;
-use SDLx::Coro::Widget::Controller;
+use SDLx::Controller::Coro;
 
 
 use Coro;
@@ -12,8 +12,8 @@ use Coro::EV;
 use AnyEvent;
 
 use SDL;
-use SDL::App;
-use SDL::Game::Rect;
+use SDLx::App;
+use SDLx::Rect;
 use SDL::Event;
 use SDL::Audio;
 use SDL::Mixer;
@@ -26,7 +26,7 @@ sub init_video {
 
   SDL::init( SDL_INIT_AUDIO | SDL_INIT_VIDEO );
 
-  $app = SDL::App->new(
+  $app = SDLx::App->new(
     -title => 'rectangle',
     -width => 640,
     -height => 480,
@@ -60,7 +60,7 @@ sub make_box {
   my $color = SDL::Video::map_RGB( $pixel_format, int rand 256, int rand 256, int rand 256 );
  
   async {
-    my $grect = SDL::Game::Rect->new($initial_x, $initial_y, 10, 10);
+    my $grect = SDLx::Rect->new($initial_x, $initial_y, 10, 10);
     my $x_direction = 1;
     my $y_direction = 1;
     while(1) {
@@ -102,7 +102,7 @@ or if that gets boring, try:
 
   my $repl = SDLx::Coro::REPL::start();
 
-  my $game = SDLx::Coro::Widget::Controller->new;
+  my $game = SDLx::Controller::Coro->new;
 
   $game->add_event_handler( sub {
     my $event = shift;

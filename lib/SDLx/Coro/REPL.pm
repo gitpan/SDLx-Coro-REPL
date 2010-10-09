@@ -4,12 +4,12 @@ package SDLx::Coro::REPL;
 
 SDLx::Coro::REPL - A REPL for your SDL
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
-  use SDLx::Coro::Widget::Controller;
+  use SDLx::Controller::Coro;
   use SDLx::Coro::REPL;
   SDLx::Coro::REPL::start();
-  my $controller = SDLx::Coro::Widget::Controller->new;
+  my $controller = SDLx::Controller::Coro->new;
   $controller->run();
 
   # More coming soon!
@@ -18,13 +18,12 @@ SDLx::Coro::REPL - A REPL for your SDL
 =cut
 
 BEGIN { $ENV{PERL_RL} = 'Perl' }
+
 use Devel::REPL;
-
 use Coro;
-use Coro::EV;
-use AnyEvent;
+use SDLx::Controller::Coro;
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use Term::ReadLine::readline;
 {
@@ -36,9 +35,7 @@ use Term::ReadLine::readline;
     # $Term::ReadLine::Perl::term->Tk_loop if $Term::ReadLine::toloop && defined &Tk::DoOneEvent;
     until(defined ($key = Term::ReadKey::ReadKey(-1, $readline::term_IN))) {
       # print "Waiting for key...\n";
-      my $done = AnyEvent->condvar;
-      my $timer = AnyEvent->timer( after => 0.01, cb => sub {$done->send;Coro::cede();} );
-      $done->recv;
+      SDLx::Controller::Coro::yield();
     }
     return $key;
   }
@@ -52,14 +49,18 @@ sub start {
   use vars qw( $repl );
   $repl = Devel::REPL->new;
   $repl->load_plugin($_) for qw(
-    History
-    DumpHistory
+    History DumpHistory
     OutputCache
     LexEnv
-    Colors MultiLine::PPI
+    Colors
+    MultiLine::PPI
     FancyPrompt
-    DDS Refresh Interrupt Packages
+    DDS
+    Refresh
+    Interrupt
+    Packages
     ShowClass
+    Completion CompletionDriver::LexEnv CompletionDriver::Keywords
   );
     # Completion CompletionDriver::LexEnv
     # CompletionDriver::Keywords
@@ -92,9 +93,7 @@ sub start {
     while(1) {
       # print "Running once...\n";
       $repl->run_once_safely;
-      my $done = AnyEvent->condvar;
-      my $delay = AnyEvent->timer( after => 0.00000001, cb => sub {  $done->send; cede();} );
-      $done->recv;
+      SDLx::Controller::Coro::yield();
     }
   };
 

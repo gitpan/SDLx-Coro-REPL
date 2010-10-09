@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               SDLx-Coro-REPL
-version:            0.01
+version:            0.03
 abstract:           A REPL for your SDL
 author:
     - awwaiid <awwaiid@thelackthereof.org>
@@ -12,7 +12,7 @@ build_requires:
     ExtUtils::MakeMaker:  0
 requires:
     Devel::REPL:          0
-    SDLx::Coro::Widget::Controller:  0
+    SDLx::Controller::Coro:  0
 no_index:
     directory:
         - t

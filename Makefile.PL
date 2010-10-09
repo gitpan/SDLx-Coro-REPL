@@ -5,7 +5,7 @@ WriteMakefile(
     NAME              => 'SDLx::Coro::REPL',
     VERSION_FROM      => 'lib/SDLx/Coro/REPL.pm', # finds $VERSION
     PREREQ_PM         => {
-      SDLx::Coro::Widget::Controller => 0,
+      SDLx::Controller::Coro => 0,
       Devel::REPL => 0,
     }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
